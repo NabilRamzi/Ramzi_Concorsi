@@ -33,6 +33,31 @@ public class Concorso
         this.dataProva=dataProva;
         this.punteggioConcorso=punteggioConcorso;
     }
+   
+  
+    
+    public Concorso(Concorso c)
+    {
+        this.codiceFiscale=c.codiceFiscale;
+        this.codiceIdentificativo=c.codiceIdentificativo;
+        this.cognome=c.cognome;
+        this.nome=c.nome;
+        this.punteggioConcorso=c.punteggioConcorso;
+        this.tipologiaConcorso=c.tipologiaConcorso;
+        this.dataProva=c.dataProva;  
+    }
+    
+    public Concorso()
+    {
+        codiceFiscale="";
+        codiceIdentificativo=-1;
+        cognome="";
+        nome="";
+        punteggioConcorso=-1;
+        tipologiaConcorso="";
+        dataProva="";
+        
+    }
     
 
     public int getCodiceIdentificativo() 
