@@ -35,7 +35,20 @@ public class Main
         
         do
         {
-          sceltaUtente=menu.sceltaMenu();  
+          sceltaUtente=menu.sceltaMenu();
+          switch (sceltaUtente)
+          {
+              case 0:
+              {
+                  System.out.println("L'applicazione terminerà");
+                  break;
+              }
+              case 1:
+              {
+                  
+              }
+              
+          }
         }while(sceltaUtente!=0);
             
         

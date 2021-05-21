@@ -18,6 +18,7 @@ public class Concorso
     private String codiceFiscale;
     private String dataProva;
     private int punteggioConcorso;
+    private int numeroProve;
     
   
     
