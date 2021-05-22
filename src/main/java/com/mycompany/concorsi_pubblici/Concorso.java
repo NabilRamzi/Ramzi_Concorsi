@@ -5,6 +5,8 @@
  */
 package com.mycompany.concorsi_pubblici;
 
+import java.time.*;
+
 /**
  *
  * @author RamziNabil
@@ -16,7 +18,7 @@ public class Concorso
     private String cognome;
     private String nome;
     private String codiceFiscale;
-    private String dataProva;
+    private LocalDate dataProva;
     private int punteggioConcorso;
     private int numeroProve;
     
@@ -24,14 +26,14 @@ public class Concorso
     
     
     
-    public Concorso(int codiceIdentificativo, String tipologiaConcorso, String cognome, String nome, String codiceFiscale, String dataProva, int punteggioConcorso)
+    public Concorso(int codiceIdentificativo, String tipologiaConcorso, String cognome, String nome, String codiceFiscale, int anno,int mese,int giorno, int punteggioConcorso)
     {
         this.codiceFiscale=codiceFiscale;
         this.codiceIdentificativo=codiceIdentificativo;
         this.tipologiaConcorso=tipologiaConcorso;
         this.cognome=cognome;
         this.nome=nome;
-        this.dataProva=dataProva;
+        this.dataProva=dataProva.of(anno,mese,giorno);
         this.punteggioConcorso=punteggioConcorso;
     }
    
@@ -56,7 +58,7 @@ public class Concorso
         nome="";
         punteggioConcorso=-1;
         tipologiaConcorso="";
-        dataProva="";
+        dataProva=dataProva.now();
         
     }
     
@@ -85,7 +87,7 @@ public class Concorso
         return codiceFiscale;
     }
 
-    public String getDataProva() 
+    public LocalDate getDataProva() 
     {
         return dataProva;
     }
@@ -99,6 +101,12 @@ public class Concorso
     {
         this.tipologiaConcorso = tipologiaConcorso;
     }
+
+    public void setCodiceIdentificativo(int codiceIdentificativo) 
+    {
+        this.codiceIdentificativo = codiceIdentificativo;
+    }
+    
 
     public void setCognome(String cognome) 
     {
@@ -115,9 +123,9 @@ public class Concorso
         this.codiceFiscale = codiceFiscale;
     }
 
-    public void setDataProva(String dataProva) 
+    public void setDataProva(int anno, int mese,int giorno) 
     {
-        this.dataProva = dataProva;
+        this.dataProva = dataProva.of(anno,mese,giorno);
     }
 
     public void setPunteggioConcorso(int punteggioConcorso) 

@@ -11,24 +11,27 @@ package com.mycompany.concorsi_pubblici;
  */
 
 import  file.FileExeption;
-import  File.TextFile;
+
 
 public class ElencoProva 
 {
     //attributi
     private Concorso[] insiemeConcorsi;
     private static int N_MAX_CONCORSI=100;
+    private int nConcorsiPresenti;
     
     
     
     public ElencoProva()
     {
         insiemeConcorsi= new Concorso[N_MAX_CONCORSI];
+        nConcorsiPresenti=0;
     }
     
     public ElencoProva(ElencoProva e1)
     {
-       insiemeConcorsi=e1.getInsiemeConcorsi();         
+       insiemeConcorsi=e1.getInsiemeConcorsi(); 
+       nConcorsiPresenti=0;
     }
     
     public int aggiungiConcorso(Concorso c1)
@@ -38,6 +41,7 @@ public class ElencoProva
            if(insiemeConcorsi[i]==null)
            {
                insiemeConcorsi[i]= new Concorso(c1);
+               nConcorsiPresenti++;
                return 0;
            }
        
@@ -45,21 +49,25 @@ public class ElencoProva
        return -1;
     }
     
-    public void visualizzaConcorsi(String codiceFiscale)
+    public Concorso[] visualizzaConcorsi(String codiceFiscale)
     {
+        Concorso[] elencoConcorsi=new Concorso[insiemeConcorsi.length];
+        int c=0;
        for(int i=0; i<insiemeConcorsi.length; i++)
        {
            if(insiemeConcorsi[i]!=null)
            {
               if (insiemeConcorsi[i].getCodiceFiscale().compareToIgnoreCase(codiceFiscale)==0)
               {
-                  System.out.println(insiemeConcorsi[i].toString());
+                 elencoConcorsi[c]=insiemeConcorsi[i];
+                 c++;
               }
                   
                   
            }
        
        }
+       return elencoConcorsi;
        
     }
     
@@ -86,13 +94,15 @@ public class ElencoProva
             insiemeConcorsi[posizione]=insiemeConcorsi[posizione+1];
         }
         insiemeConcorsi[getNMaxConcorsi()-1]=null;
+        nConcorsiPresenti--;
     }
     
     
     
     
-    public void visualizzaConcorsi()
+    public Concorso[] visualizzaConcorsi()
     {
+       Concorso[] elencoConcorsi=new Concorso[insiemeConcorsi.length];
        for(int i=0; i<insiemeConcorsi.length; i++)
        {
            if(insiemeConcorsi[i]!=null)
@@ -101,13 +111,32 @@ public class ElencoProva
            }
        
        }
+       return elencoConcorsi;
        
     }
     
-   public void visualizzaNumPartecipanti(String tipologia)
+   public int visualizzaNumPartecipantiPerTipologia(String tipologia)
    {
-       
+       int contatore=0;
+       for (int i=0; i<insiemeConcorsi.length; i++)
+       {
+           if (insiemeConcorsi[i]!=null)
+           {
+               if (insiemeConcorsi[i].getTipologiaConcorso().compareToIgnoreCase(tipologia)==0)
+               {
+                  contatore++; 
+               }
+           }
+       }
+       return contatore;
    }
+   
+ 
+   
+   
+   
+   
+  
     
     public static int getNMaxConcorsi()
     {
