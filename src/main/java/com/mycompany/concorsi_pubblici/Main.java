@@ -5,7 +5,12 @@
  */
 package com.mycompany.concorsi_pubblici;
 
+import file.FileExeption;
+import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,12 +22,15 @@ public class Main
     {
         String[] vociMenu= new String[8];
         Scanner tastiera= new Scanner(System.in);
-        int sceltaUtente;
+        int sceltaUtente=-1;
         Concorso concorso;
         ElencoProva ArrayConcorsi= new ElencoProva();
         int codiceIdentificativo=1;
         int anno, mese, giorno;
         String codiceFiscale, tipologia;
+        String nomeFileBinario="elencoProva.bin";
+        String nomeFileTesto="elencoProva.txt";
+        
      
               
         ElencoProva e1= new ElencoProva();
@@ -42,8 +50,30 @@ public class Main
         
         Menu menu= new Menu(vociMenu);
         
+        
+        //deserializzazione
+        
+        try 
+        {
+            
+            e1=e1.caricaProva(nomeFileBinario);
+            System.out.println("Dati caricati correttamente");
+        }
+        catch (IOException ex) 
+        {
+            System.out.println("Impossibile accedere al file. I dati non sono stati caricati");
+        }
+        catch (FileExeption ex) 
+        {
+            System.out.println("Errore di lettura dal file. I dati non sono stati caricati");
+        }
+        
+        
         do
         {
+            try
+            {
+                
           sceltaUtente=menu.sceltaMenu();
           switch (sceltaUtente)
           {
@@ -162,15 +192,91 @@ public class Main
                   
                   Concorso c1;
                   System.out.println("Per la tipologia inserita ci sono: "+e1.visualizzaNumPartecipantiPerTipologia(tipologia)+" partecipanti");
+                  break;
                   
               }
               case 5:
               {
+                  Concorso[] elencoOrdinato;
+                  tastiera.nextLine();
+                  System.out.println("Visualizza i risultati di un concorso tenutosi in una determinata data"); 
+                  
+                  System.out.println("Inserisci la tipologia: ");
+                  tipologia=tastiera.nextLine();
+                  
+                  System.out.println("Inserisci l'anno: ");
+                  anno=tastiera.nextInt();
+                  
+                  System.out.println("Inserisci il mese: ");
+                  mese=tastiera.nextInt();
+                  
+                  System.out.println("Inserisci il giorno: ");
+                  giorno=tastiera.nextInt();
+                  
+                  elencoOrdinato=e1.visualizzaOrdineAlfabetico(anno, mese, giorno, tipologia);
+                  
+                  for (int i=0; i<elencoOrdinato.length; i++)
+                  {
+                      if (elencoOrdinato[i]!=null)
+                      {
+                          System.out.println(elencoOrdinato[i]); 
+                      }
+                  }
+                  
+                  break;
+                  
                   
               }
               
+              case 6:
+              {
+                try 
+                {
+                    e1.salvaProva(nomeFileBinario);
+                    System.out.println("Dati salvati correttamente");
+
+                } catch (IOException ex) 
+                {
+
+                    System.out.println("Impossibile accedere al file. I dati non sono stati salvati");
+                }
+                break;
+                
+                
+                 
+                  
+                  
+              }
+              case 7:
+              {
+                  
+                  try
+                     {
+                        e1.esportaConcorsoCsv(nomeFileTesto);
+                         System.out.println("esportazione avvenuta correttamente!");
+                     }
+                     catch(IOException e0)
+                     {
+                         System.out.println("Impossibile accedere al file, i libri non sono stati salvati.");
+                     }
+                     catch( FileExeption  e2)
+                     {
+                         System.out.println(e2.toString());
+                     }
+                 
+                     break;
+
+              }
+
+              
               
           }
+          }
+          catch(InputMismatchException | NumberFormatException ex)
+                {
+                    tastiera.nextLine();
+                    System.out.println("Input non corretto");
+                }
         }while(sceltaUtente!=0);
             
         

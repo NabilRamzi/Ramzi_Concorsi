@@ -5,13 +5,14 @@
  */
 package com.mycompany.concorsi_pubblici;
 
+import java.io.Serializable;
 import java.time.*;
 
 /**
  *
  * @author RamziNabil
  */
-public class Concorso 
+public class Concorso implements Serializable
 {
     private int codiceIdentificativo;
     private String tipologiaConcorso;
@@ -61,6 +62,12 @@ public class Concorso
         dataProva=dataProva.now();
         
     }
+
+    public int getNumeroProve() 
+    {
+        return numeroProve;
+    }
+    
     
 
     public int getCodiceIdentificativo() 

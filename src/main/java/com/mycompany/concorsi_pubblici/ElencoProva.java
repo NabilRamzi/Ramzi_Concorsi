@@ -11,9 +11,20 @@ package com.mycompany.concorsi_pubblici;
  */
 
 import  file.FileExeption;
+import file.TextFile;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.time.LocalDate;
+import Ordinatore.*;
 
 
-public class ElencoProva 
+
+public class ElencoProva implements Serializable
 {
     //attributi
     private Concorso[] insiemeConcorsi;
@@ -33,6 +44,13 @@ public class ElencoProva
        insiemeConcorsi=e1.getInsiemeConcorsi(); 
        nConcorsiPresenti=0;
     }
+
+    public int getnConcorsiPresenti() 
+    {
+        return nConcorsiPresenti;
+    }
+    
+    
     
     public int aggiungiConcorso(Concorso c1)
     {
@@ -143,15 +161,102 @@ public class ElencoProva
         return N_MAX_CONCORSI;
     }
 
-    public Concorso[] getInsiemeConcorsi() {
+    public Concorso[] getInsiemeConcorsi() 
+    {
         return insiemeConcorsi;
     }
     
     
-    public void salvaConcorsi(String nomeFile)
-    {
-        
-        
-        
-    }
+    public void salvaProva(String nomeFile) throws FileNotFoundException, IOException
+  {
+      FileOutputStream f1=new FileOutputStream(nomeFile);
+      ObjectOutputStream outputStream=new ObjectOutputStream(f1);
+      outputStream.writeObject(this);
+      outputStream.flush();
+      outputStream.close();
+  }
+  
+  public ElencoProva caricaProva(String nomeFile) throws FileNotFoundException, IOException, FileExeption 
+  {
+      FileInputStream f1=new FileInputStream(nomeFile);
+      ObjectInputStream inputStream=new ObjectInputStream(f1);
+      ElencoProva e1;
+       try 
+       {
+           e1=(ElencoProva)inputStream.readObject();
+           inputStream.close();
+            return e1;
+       } 
+       catch (ClassNotFoundException ex) 
+       {
+          inputStream.close();
+          throw new FileExeption("Errore nella lettura del file");
+       }
+       
+  }
+  public Concorso getConcorso(int n)
+  {
+      try
+      {
+          return new Concorso(insiemeConcorsi[n]);
+      }
+      catch (NullPointerException e0)
+              {
+                 return null;
+              }
+  }
+  
+  public Concorso[] visualizzaOrdineAlfabetico(int anno, int mese, int giorno, String tipologia)
+  {
+      LocalDate dataConfronto=null;
+      dataConfronto= dataConfronto.of(anno, mese, giorno);
+      int n=0;
+      for(int i=0; i<nConcorsiPresenti; i++)
+      {
+          if(insiemeConcorsi[i]!=null && dataConfronto.isEqual(insiemeConcorsi[i].getDataProva()) && tipologia.compareToIgnoreCase(insiemeConcorsi[i].getTipologiaConcorso())==0)
+          {
+             n++;
+          }
+      }
+      Concorso[] elenco=new Concorso[n];
+      int c=0;
+      
+      for(int i=0; i<nConcorsiPresenti; i++)
+      {
+          if(insiemeConcorsi[i]!=null && dataConfronto.isEqual(insiemeConcorsi[i].getDataProva()) && tipologia.compareToIgnoreCase(insiemeConcorsi[i].getTipologiaConcorso())==0)
+          {
+             elenco[c] = insiemeConcorsi[i];
+             c++;
+          }
+      }
+      elenco= Ordinatore.selectionSortAfabetico(elenco);
+      return elenco;
+      
+      
+      
+      
+  }
+ 
+  public void esportaConcorsoCsv(String nomeFile) throws IOException, FileExeption
+  {
+      TextFile f1= new TextFile(nomeFile, 'W');
+      
+      Concorso c=null;
+      
+          for(int i=0;i<getnConcorsiPresenti();i++)
+          {
+              c=getConcorso(i);
+              if(c!=null)
+              {
+                 
+                  f1.toFile(c.getCodiceIdentificativo()+";"+c.getNome()+";"+c.getCognome()+";"+c.getCodiceFiscale()+";"+c.getTipologiaConcorso()+";"+c.getPunteggioConcorso()+";"+c.getDataProva()+";");
+                  
+                 
+              }
+          }
+      
+      f1.close();
+      
+  }
+
 }
